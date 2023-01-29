@@ -13,3 +13,8 @@ export interface WeatherData {
   windSpeed?: number;
   rainProbability?: number;
 }
+
+export interface LocationData {
+  city?: string;
+  country?: string;
+}

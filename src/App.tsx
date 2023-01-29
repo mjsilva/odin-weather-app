@@ -1,15 +1,17 @@
 import CurrentWeather from "./components/CurrentWeather";
 import Location from "./components/Location";
 import { useEffect, useState } from "react";
-import { Geolocation, WeatherData } from "./types";
+import { Geolocation, LocationData, WeatherData } from "./types";
+import { byIso } from "country-code-lookup";
 
 function App() {
-  const [location, setLocation] = useState<Geolocation>({
+  const [geolocation, setGeolocation] = useState<Geolocation>({
     latitude: 0,
     longitude: 0,
   });
 
   const [weatherData, setWeatherData] = useState<WeatherData>({});
+  const [locationData, setLocationData] = useState<LocationData>({});
 
   const openWeatherAPIKey = "af0726443490c0752126572700056176";
 
@@ -19,7 +21,7 @@ function App() {
   useEffect(() => {
     (async () => {
       await navigator.geolocation.getCurrentPosition((pos) => {
-        setLocation({
+        setGeolocation({
           latitude: pos.coords.latitude,
           longitude: pos.coords.longitude,
         });
@@ -33,9 +35,11 @@ function App() {
   useEffect(() => {
     (async () => {
       const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?units=metric&lat=${location.latitude}&lon=${location.longitude}&appid=${openWeatherAPIKey}`
+        `https://api.openweathermap.org/data/2.5/weather?units=metric&lat=${geolocation.latitude}&lon=${geolocation.longitude}&appid=${openWeatherAPIKey}`
       );
       const weatherDataResponse = await response.json();
+
+      console.log({ weatherDataResponse });
 
       setWeatherData({
         description: weatherDataResponse.weather[0].main.toLowerCase(),
@@ -47,13 +51,24 @@ function App() {
         windSpeed: Math.round(weatherDataResponse.wind.speed),
       });
 
+      setLocationData({
+        city: weatherDataResponse.name,
+        country: byIso(weatherDataResponse.sys.country)?.country,
+      });
+
+      console.log({ weatherData });
     })();
-  }, [location]);
+  }, [geolocation]);
 
   return (
     <div id="App">
-      <Location />
+      <Location locationData={locationData} />
       <CurrentWeather weatherData={weatherData} />
+      <div className="flex justify-center items-center">
+        <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full" role="status">
+          <span className="visually-hidden"></span>
+        </div>
+      </div>
     </div>
   );
 }
