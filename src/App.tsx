@@ -1,4 +1,3 @@
-import "./App.css";
 import CurrentWeather from "./components/CurrentWeather";
 import Location from "./components/Location";
 import { useEffect, useState } from "react";

@@ -8,7 +8,6 @@ import {
 } from "react-icons/wi";
 import { WeatherData } from "../types";
 import { format as dateFormat } from "date-fns";
-import "../App.css";
 import React from "react";
 
 const CurrentWeather = (props: { weatherData: WeatherData }) => {
