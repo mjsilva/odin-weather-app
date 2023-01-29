@@ -9,7 +9,7 @@ Made with ❤️ for [this](https://www.theodinproject.com/lessons/node-path-jav
 * Typescript
 * Vite
 
-# How to run in
+# How to run it
 1. Clone this repo
 2. Run `npm run dev`
 
